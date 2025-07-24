@@ -6,18 +6,30 @@ const Statistics = ({good, neutral, bad, all, average, positivePercentage}) => {
       <div>
         <h2>statistics</h2>
         <div>
-          <p>good {good}</p>
-          <p>neutral {neutral}</p>
-          <p>bad {bad}</p>
-          <p>all {all}</p>
-          <p>average {average}</p>
-          <p>positive {positivePercentage}%</p>
+          <StatisticLine name='good' data={good} />
+          <StatisticLine name='neutral' data={neutral} />
+          <StatisticLine name='bad' data={bad} />
+          <StatisticLine name='all' data={all} />
+          <StatisticLine name='average' data={average} />
+          <StatisticLine name='positive' data={positivePercentage} />
         </div>
       </div>
     );
   }
   return (
     <p>No feedback given</p>
+  );
+}
+
+const Button = ({handleClick, text}) => {
+  return (
+    <button onClick={handleClick}>{text}</button>
+  );
+}
+
+const StatisticLine = ({name, data}) => {
+  return(
+    <p>{name} {data}</p>
   );
 }
 
@@ -28,14 +40,14 @@ const App = () => {
   const [all, setAll] = useState(0);
   const [points, setPoints] = useState(0);
   const [average, setAverage] = useState(0);
-  const [positivePercentage, setPositivePercentage] = useState(0);
+  const [positivePercentage, setPositivePercentage] = useState('0%');
 
   const handleGoodClick = () => {
     const newValue = good + 1;
     const total = all + 1;
     const newPoints = points + 1;
     const newAverage = newPoints / total;
-    const newPositivePercentage = (newValue / total) * 100;
+    const newPositivePercentage = `${(newValue / total) * 100}%`;
 
     setAll(total);
     setPoints(newPoints);
@@ -49,7 +61,7 @@ const App = () => {
     const total = all + 1;
     const newPoints = points;
     const newAverage = newPoints / total;
-    const newPositivePercentage = (good / total) * 100;
+    const newPositivePercentage = `${(good / total) * 100}%`;
   
     setAll(total);
     setPoints(newPoints);
@@ -63,7 +75,7 @@ const App = () => {
     const total = all + 1;
     const newPoints = points - 1;
     const newAverage = newPoints / total;
-    const newPositivePercentage = (good / total) * 100;
+    const newPositivePercentage = `${(good / total) * 100}%`;
 
     setAll(total);
     setPoints(newPoints);
@@ -75,9 +87,9 @@ const App = () => {
   return (
     <div>
       <h1>give feedback</h1>
-      <button onClick={handleGoodClick}>good</button>
-      <button onClick={handleNeutralClick}>neutral</button>
-      <button onClick={handleBadClick}>bad</button>
+      <Button handleClick={handleGoodClick} text='good' />
+      <Button handleClick={handleNeutralClick} text='neutral' />
+      <Button handleClick={handleBadClick} text='bad' />
       <Statistics good={good} bad={bad} neutral={neutral} all={all} average={average} positivePercentage={positivePercentage} />
     </div>
   )
