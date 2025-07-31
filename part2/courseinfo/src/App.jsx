@@ -23,6 +23,8 @@ const Course = ({course}) => {
   )
 }
 
+const Total = ({total}) => (<p><b>Total of {total} exercises</b></p>);
+
 const App = () => {
   const course = {
     name: 'Half Stack application development',
@@ -41,12 +43,21 @@ const App = () => {
         name: 'State of a component',
         exercises: 14,
         id: 3
+      },
+      {
+        name: 'Redux',
+        exercises: 11,
+        id: 4
       }
     ],
-  }
+  };
+  const total = course.parts.reduce((acc, part) => acc + part.exercises, 0);
 
   return (
-    <Course course={course} />
+    <div>
+      <Course course={course} />
+      <Total total={total} />
+    </div>
   )
 }
 
