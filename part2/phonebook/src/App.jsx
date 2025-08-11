@@ -4,7 +4,7 @@ import Form from './components/Form';
 import People from './components/People';
 
 const App = () => {
-  const [people, setPersons] = useState([
+  const [people, setPeople] = useState([
     { name: 'Arto Hellas', number: 666666666, id: 1 }
   ]) 
   const [newName, setNewName] = useState('');
@@ -24,7 +24,7 @@ const App = () => {
       id: people.length + 1,
     }
 
-    setPersons(people.concat(nameObject)); 
+    setPeople(people.concat(nameObject)); 
     setNewName('');
     setNewNumber('');
 
