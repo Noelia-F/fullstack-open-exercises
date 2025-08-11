@@ -1,11 +1,11 @@
 import { useState } from 'react';
 
-const NumberList = ({persons}) => {
-  if (persons.length > 0) {
+const NumberList = ({people}) => {
+  if (people.length > 0) {
     return (
       <ul>
         {
-          persons.map((person) => 
+          people.map((person) => 
             <li key={person.id}>{person.name} {person.number}</li>
           )
         }
@@ -15,26 +15,27 @@ const NumberList = ({persons}) => {
 }
 
 const App = () => {
-  const [persons, setPersons] = useState([
+  const [people, setPersons] = useState([
     { name: 'Arto Hellas', number: 666666666, id: 1 }
   ]) 
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
+  const [filterName, setFilterName] = useState('');
 
   const addName = (event) => {
     event.preventDefault();
 
-    if (persons.some((person) => person.name === newName)) {
+    if (people.some((person) => person.name === newName)) {
       return alert(`${newName} is already added to phonebook`);
     }
 
     const nameObject = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1,
+      id: people.length + 1,
     }
 
-    setPersons(persons.concat(nameObject)); 
+    setPersons(people.concat(nameObject)); 
     setNewName('');
     setNewNumber('');
 
@@ -48,9 +49,21 @@ const App = () => {
     setNewNumber(event.target.value);
   }
 
+  const handleFilter = (event) => {
+    setFilterName(event.target.value);
+  }
+
+  const personFiltered = filterName
+    ? people.filter((person) => person.name.toLowerCase().includes(filterName.toLowerCase()))
+    : people;
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+        filter shown with: <input value={filterName} onChange={handleFilter} />
+      </div>
+      <h2>Add a new</h2>
       <form onSubmit={addName}>
         <div>
           name: <input value={newName} onChange={handleNameChange} />
@@ -63,7 +76,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      <NumberList persons={persons} />
+      <NumberList people={personFiltered} />
     </div>
   )
 }
