@@ -1,15 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+
 import Filter from './components/Filter';
 import Form from './components/Form';
 import People from './components/People';
 
 const App = () => {
-  const [people, setPeople] = useState([
-    { name: 'Arto Hellas', number: 666666666, id: 1 }
-  ]) 
+  const [people, setPeople] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filterName, setFilterName] = useState('');
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then((response) => setPeople(response.data));
+  }, []);
 
   const addName = (event) => {
     event.preventDefault();
