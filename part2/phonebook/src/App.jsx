@@ -42,7 +42,7 @@ const App = () => {
   const [filterName, setFilterName] = useState('');
   const [disabledButton, setDisabledButton] = useState(true);
   const [alertMessage, setAlertMessage] = useState(null);
-  const [alertType, setAlertType] = useState('success');
+  const [alertType, setAlertType] = useState('');
 
   useEffect(() => {
     peopleService
@@ -66,6 +66,15 @@ const App = () => {
             setNewName('');
             setNewNumber(''); 
           })
+          .catch(error => {
+            setAlertMessage(`Information of ${changedPerson.name} has already been removed from server`);
+            setAlertType('error');
+            setTimeout(() => {
+              setAlertMessage(null);
+              setAlertType('');
+            }, 5000);
+            setPeople(people.filter(person => person.id !== changedPerson.id));
+          })
       }
     }
 
@@ -81,6 +90,7 @@ const App = () => {
         setNewName('');
         setNewNumber('');
         setAlertMessage(`Added ${nameObject.name}`);
+        setAlertType('success');
 
         setTimeout(() => {
           setAlertMessage(null);
