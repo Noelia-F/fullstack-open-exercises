@@ -27,7 +27,6 @@ const App = () => {
     const nameObject = {
       name: newName,
       number: newNumber,
-      id: people.length + 1,
     }
 
     peopleService
@@ -51,6 +50,17 @@ const App = () => {
     setFilterName(event.target.value);
   }
 
+  const handleDeleteOf = (id) => {
+    const person = people.find(person => person.id === id);
+    const text = `Delete ${person.name}?`;
+
+    if (confirm(text) === true) {
+      return peopleService
+        .remove(id)
+        .then(currentPerson => setPeople(people.filter((person) => person.id !== currentPerson.id)));
+    }
+  }
+
   const personFiltered = filterName
     ? people.filter((person) => person.name.toLowerCase().includes(filterName.toLowerCase()))
     : people;
@@ -62,7 +72,7 @@ const App = () => {
       <h2>Add a new</h2>
       <Form addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
       <h2>Numbers</h2>
-      <People people={personFiltered} />
+      <People people={personFiltered} handleDeleteOf={handleDeleteOf} />
     </div>
   )
 }
