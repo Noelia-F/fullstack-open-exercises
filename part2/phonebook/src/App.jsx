@@ -5,12 +5,44 @@ import Filter from './components/Filter';
 import Form from './components/Form';
 import People from './components/People';
 
+const Notification = ({message, type}) => {
+  const typeMap = {
+    'success': {
+      color: 'green',
+    },
+    'error': {
+      color: 'red',
+    }
+  }
+  const notificationStyle = {
+    ...typeMap[type],
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  };
+
+  if (message === null) {
+    return null;
+  }
+
+  return (
+    <div style={notificationStyle}>
+      {message}
+    </div>
+  );
+}
+
 const App = () => {
   const [people, setPeople] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filterName, setFilterName] = useState('');
   const [disabledButton, setDisabledButton] = useState(true);
+  const [alertMessage, setAlertMessage] = useState(null);
+  const [alertType, setAlertType] = useState('success');
 
   useEffect(() => {
     peopleService
@@ -47,7 +79,12 @@ const App = () => {
       .then((returnedPeople) => {
         setPeople(people.concat(returnedPeople)); 
         setNewName('');
-        setNewNumber(''); 
+        setNewNumber('');
+        setAlertMessage(`Added ${nameObject.name}`);
+
+        setTimeout(() => {
+          setAlertMessage(null);
+        }, 5000)
       });
   }
 
@@ -83,6 +120,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={alertMessage} type={alertType} />
       <Filter filterName={filterName} handleFilter={handleFilter} />
       <h2>Add a new</h2>
       <Form
