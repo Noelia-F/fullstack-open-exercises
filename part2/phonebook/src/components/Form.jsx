@@ -1,4 +1,4 @@
-const Form = ({addName, handleNameChange, handleNumberChange, newName, newNumber}) => {
+const Form = ({addName, handleNameChange, handleNumberChange, newName, newNumber, disabled}) => {
   return (
     <form onSubmit={addName}>
       <div>
@@ -9,7 +9,7 @@ const Form = ({addName, handleNameChange, handleNumberChange, newName, newNumber
       </div>
       
       <div>
-        <button type="submit">add</button>
+        <button disabled={disabled} type="submit">add</button>
       </div>
     </form>
   );

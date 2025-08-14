@@ -10,6 +10,7 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filterName, setFilterName] = useState('');
+  const [disabledButton, setDisabledButton] = useState(true);
 
   useEffect(() => {
     peopleService
@@ -21,7 +22,19 @@ const App = () => {
     event.preventDefault();
 
     if (people.some((person) => person.name === newName)) {
-      return alert(`${newName} is already added to phonebook`);
+      const text = `${newName} is already added to phonebook, replace the old number with a new one`;
+      const person = people.find(person => person.name === newName);
+      const changedPerson = {...person, number: newNumber}
+  
+      if (confirm(text)) {
+        return peopleService
+          .update(changedPerson.id, changedPerson)
+          .then( returnedPerson => {
+            setPeople(people.map(person => person.id !== returnedPerson.id ? person : returnedPerson));
+            setNewName('');
+            setNewNumber(''); 
+          })
+      }
     }
 
     const nameObject = {
@@ -40,10 +53,12 @@ const App = () => {
 
   const handleNameChange = (event) => {
     setNewName(event.target.value);
+     setDisabledButton(!newNumber || !event.target.value);
   }
 
   const handleNumberChange = (event) => {
     setNewNumber(event.target.value);
+    setDisabledButton(!newName || !event.target.value);
   }
 
   const handleFilter = (event) => {
@@ -70,7 +85,14 @@ const App = () => {
       <h2>Phonebook</h2>
       <Filter filterName={filterName} handleFilter={handleFilter} />
       <h2>Add a new</h2>
-      <Form addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
+      <Form
+        addName={addName}
+        newName={newName}
+        handleNameChange={handleNameChange}
+        newNumber={newNumber}
+        handleNumberChange={handleNumberChange}
+        disabled={disabledButton}
+      />
       <h2>Numbers</h2>
       <People people={personFiltered} handleDeleteOf={handleDeleteOf} />
     </div>
