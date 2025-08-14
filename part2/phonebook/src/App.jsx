@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import peopleService from './services/people';
 
 import Filter from './components/Filter';
 import Form from './components/Form';
@@ -12,9 +12,9 @@ const App = () => {
   const [filterName, setFilterName] = useState('');
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then((response) => setPeople(response.data));
+    peopleService
+      .getAll()
+      .then((initialPeople) => setPeople(initialPeople));
   }, []);
 
   const addName = (event) => {
@@ -30,10 +30,10 @@ const App = () => {
       id: people.length + 1,
     }
 
-    axios
-      .post('http://localhost:3001/persons', nameObject)
-      .then((response) => {
-        setPeople(people.concat(response.data)); 
+    peopleService
+      .create(nameObject)
+      .then((returnedPeople) => {
+        setPeople(people.concat(returnedPeople)); 
         setNewName('');
         setNewNumber(''); 
       });
